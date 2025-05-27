@@ -1,11 +1,66 @@
+# Cloud Build configuration file
+# Place this file as cloudbuild.yaml in your repository root
+
 steps:
-  - name: 'ubuntu'
-  - entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo "Hello, World!first step in Cloud Build"
-        echo "This is a simple Cloud Build step using Ubuntu."
-        echo "You can customize this script to run any commands you need."
+  # Step 1: Install dependencies (example for Node.js project)
+  - name: 'node:18'
+    entrypoint: 'npm'
+    args: ['install']
+    
+  # Step 2: Run tests
+  - name: 'node:18'
+    entrypoint: 'npm'
+    args: ['test']
+    
+  # Step 3: Build the application
+  - name: 'node:18'
+    entrypoint: 'npm'
+    args: ['run', 'build']
+    
+  # Step 4: Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', 'gcr.io/$PROJECT_ID/my-app:$COMMIT_SHA',
+      '-t', 'gcr.io/$PROJECT_ID/my-app:latest',
+      '.'
+    ]
+    
+  # Step 5: Push Docker image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/my-app:$COMMIT_SHA']
+    
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/my-app:latest']
+
+# Optional: Deploy to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: [
+      'run', 'deploy', 'my-app',
+      '--image', 'gcr.io/$PROJECT_ID/my-app:$COMMIT_SHA',
+      '--region', 'us-central1',
+      '--platform', 'managed',
+      '--allow-unauthenticated'
+    ]
+
+# Build options
 options:
+  # Use higher CPU for faster builds
+  machineType: 'E2_HIGHCPU_8'
+  # Specify disk size if needed
+  diskSizeGb: 100
+  # Enable logging
   logging: CLOUD_LOGGING_ONLY
+
+# Timeout for the entire build (default is 10 minutes)
+timeout: '1200s'
+
+# Substitutions (can be overridden when triggering)
+substitutions:
+  _SERVICE_NAME: 'my-app'
+  _REGION: 'us-central1'
+
+# Images to be pushed to registry
+images:
+  - 'gcr.io/$PROJECT_ID/my-app:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/my-app:latest'
