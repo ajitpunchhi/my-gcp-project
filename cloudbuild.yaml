@@ -19,3 +19,5 @@ steps:
       - |
         echo "Listing project files:"
         ls -la
+options:
+  logging: CLOUD_LOGGING_ONLY
