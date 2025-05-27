@@ -1,4 +1,4 @@
 steps:
   - name: 'ubuntu'
     entrypoint: 'bash'
-    args:['-c', 'echo "Hello, World!this is a test demo project."']
+    args:['-c', 'echo "Hello, World!first change this is a test demo project."']
