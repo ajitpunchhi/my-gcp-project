@@ -4,6 +4,6 @@ steps:
     args:
       - '-c'
       - |
-        echo "Hello, World!"
+        echo "Hello, World!first step in Cloud Build"
         echo "This is a simple Cloud Build step using Ubuntu."
         echo "You can customize this script to run any commands you need."
