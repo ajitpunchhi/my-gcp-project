@@ -9,7 +9,7 @@ steps:
         echo "Starting build on Ubuntu..."
         apt-get update
         apt-get install -y curl git
-        echo "Build completed successfully!"
+        echo "Build complete successfully!"
         
   # Step 2: List files (optional verification step)
   - name: 'ubuntu:20.04'
