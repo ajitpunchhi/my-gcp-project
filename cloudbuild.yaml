@@ -1,4 +1,9 @@
 steps:
   - name: 'ubuntu'
-    entrypoint: 'bash'
-    args:['-c', 'echo "Hello, World!first change this is a test demo project."']
+  - entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Hello, World!"
+        echo "This is a simple Cloud Build step using Ubuntu."
+        echo "You can customize this script to run any commands you need."
